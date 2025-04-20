@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Midterm Dream App ni Sorino</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Midterm Dream Generator ✨</h1>
+    <form id="dreamForm" novalidate>
+      <label for="name">Pangalan mo:</label>
+      <input type="text" id="name" name="name" required pattern="[\w\s]+" />
+
+      <label for="age">Edad mo (wag magsinungaling):</label>
+      <input type="number" id="age" name="age" required min="1" max="130" />
+
+      <label for="activity">Paborito mong gawin:</label>
+      <input type="text" id="activity" name="activity" required pattern="[\w\s]+" />
+
+      <label for="destination">Dream na lugar mo (kahit impossible, push mo):</label>
+      <input type="text" id="destination" name="destination" required pattern="[\w\s]+" />
+
+      <label for="food">Favorite mong kainin (bawal ex):</label>
+      <input type="text" id="food" name="food" required pattern="[\w\s]+" />
+
+      <label for="mood">Kamusta ka today?</label>
+      <input type="text" id="mood" name="mood" required pattern="[\w\s]+" />
+
+      <label for="crush">Pangalan ng crush mo (aminin na):</label>
+      <input type="text" id="crush" name="crush" required pattern="[\w\s]+" />
+
+      <label for="dreamJob">Dream na trabaho mo:</label>
+      <input type="text" id="dreamJob" name="dreamJob" required pattern="[\w\s]+" />
+
+      <button type="submit">✨ I-GENERATE NA ✨</button>
+    </form>
+
+    <div id="result" class="result hidden"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("dreamForm");
+    const resultDiv = document.getElementById("result");
+
+    const templates = [
+      (d) => `Si <strong>${d.name}</strong> ay ${d.age} years old, gusto niyang maging <strong>${d.dreamJob}</strong>, habang naglalandi kay <strong>${d.crush}</strong> sa <strong>${d.destination}</strong>. Feeling niya <strong>${d.mood}</strong> siya, kaya kakain ng <strong>${d.food}</strong> habang <strong>${d.activity}</strong>. OA ka na girl.`,
+      (d) => `Pangarap ni <strong>${d.name}</strong> na <strong>${d.activity}</strong> sa <strong>${d.destination}</strong> kasama si <strong>${d.crush}</strong>. Gusto rin niyang maging <strong>${d.dreamJob}</strong> kahit parang imposibleng mangyari.`,
+      (d) => `Habang kumakain ng <strong>${d.food}</strong>, si <strong>${d.name}</strong> ay <strong>${d.mood}</strong> daw today. Gusto niyang maging <strong>${d.dreamJob}</strong> at makipaglandian kay <strong>${d.crush}</strong> habang nagba-banana boat sa <strong>${d.destination}</strong>.`,
+      (d) => `Si <strong>${d.name}</strong>, na feeling <strong>${d.mood}</strong> today, ay may pangarap na <strong>${d.activity}</strong> habang nagtatago kay <strong>${d.crush}</strong> sa <strong>${d.destination}</strong>.`,
+      (d) => `Kung ikaw si <strong>${d.name}</strong>, ${d.age} years old at gusto mong maging <strong>${d.dreamJob}</strong>, tapos mahilig kang <strong>${d.activity}</strong> habang kumakain ng <strong>${d.food}</strong>, may kailangan tayong pag-usapan.`,
+      (d) => `Hindi ko alam kung bakit, pero si <strong>${d.name}</strong> ay gusto ng chaotic na buhay. <strong>${d.destination}</strong>, <strong>${d.crush}</strong>, <strong>${d.food}</strong>, lahat sabay-sabay. Ganda ng mental health mo, te.`,
+      (d) => `Minsan iniisip ni <strong>${d.name}</strong> na maging <strong>${d.dreamJob}</strong> habang <strong>${d.activity}</strong> sa gitna ng <strong>${d.destination}</strong>, tapos biglang pumasok si <strong>${d.crush}</strong>. Boom. Plot twist.`,
+      (d) => `Si <strong>${d.name}</strong> ay <strong>${d.mood}</strong> today. Hindi lang basta mood swing—rollercoaster yan. Gusto pa niyang maging <strong>${d.dreamJob}</strong> at kumain ng <strong>${d.food}</strong> habang <strong>${d.activity}</strong>.`,
+      (d) => `<strong>${d.name}</strong>: "Minsan gusto ko nalang maging <strong>${d.dreamJob}</strong> para iwanan ka sa <strong>${d.destination}</strong>, <strong>${d.crush}</strong>." Grabe ‘tong app na ‘to.`,
+      (d) => `Sa panaginip ni <strong>${d.name}</strong>, nagiging <strong>${d.dreamJob}</strong> siya habang may hawak na <strong>${d.food}</strong>. Si <strong>${d.crush}</strong> daw ay nag-aabang sa <strong>${d.destination}</strong> na may mood swings rin.`,
+      (d) => `Sobrang <strong>${d.mood}</strong> daw today si <strong>${d.name}</strong>. Gusto niyang <strong>${d.activity}</strong> sa tabi ni <strong>${d.crush}</strong> habang iniisip ang pagiging <strong>${d.dreamJob}</strong>.`,
+      (d) => `Kung ikaw ay si <strong>${d.name}</strong>, tapos gusto mong maging <strong>${d.dreamJob}</strong>, kumain ng <strong>${d.food}</strong> habang nagpa-panic attack sa <strong>${d.destination}</strong>, tingin ko kailangan mo ng therapist.`,
+    ];
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const data = {
+        name: form.name.value.trim(),
+        age: form.age.value.trim(),
+        activity: form.activity.value.trim(),
+        destination: form.destination.value.trim(),
+        food: form.food.value.trim(),
+        mood: form.mood.value.trim(),
+        crush: form.crush.value.trim(),
+        dreamJob: form.dreamJob.value.trim()
+      };
+
+      for (let key in data) {
+        if (!data[key]) {
+          alert("Pakiayos ang lahat ng fields. Huwag mo kami i-ghost.");
+          return;
+        }
+      }
+
+      if (isNaN(data.age) || data.age < 1 || data.age > 130) {
+        alert("Yung edad mo? Hmm. Parang hindi totoo.");
+        return;
+      }
+
+      const template = templates[Math.floor(Math.random() * templates.length)] || (() => "Walang output. Bug? O destiny?");
+      resultDiv.innerHTML = template(data);
+      resultDiv.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
